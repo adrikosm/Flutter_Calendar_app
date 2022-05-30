@@ -1,2 +1,8 @@
 # Flutter_Calendar_app
-Flutter Calendar App 
+
+Contains a top view with a whole calendar view
+A bottom view with the tasks and the task details
+A bottom sheet where you can edit the tasks.
+
+
+Currently i am working on integrating a login and register page.
