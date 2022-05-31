@@ -68,12 +68,11 @@ class MyInputField extends StatelessWidget {
                       // Check whether the hint color is selected
                       // If it is selected set the hint color to
                       // user selected color
-                      selectedHintColor==true ? 
-                      InputDecoration(
+                      selectedHintColor == true
+                          ? InputDecoration(
                               hintText: hint,
-                              hintStyle: 
-                              basicTextStyle.copyWith(
-                            color: HexColor(hintColor)),
+                              hintStyle: basicTextStyle.copyWith(
+                                  color: HexColor(hintColor)),
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.white, width: 0),
@@ -89,7 +88,8 @@ class MyInputField extends StatelessWidget {
                               hintText: hint,
                               hintStyle: whiteText == true
                                   ? taskBasicStyle.copyWith(color: Colors.white)
-                                  : taskBasicStyle.copyWith(color:Colors.black),
+                                  : taskBasicStyle.copyWith(
+                                      color: Colors.black),
                               focusedBorder: const UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.white, width: 0),
