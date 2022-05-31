@@ -69,9 +69,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
+          floatingActionButton: actionButton(),
         )
       ],
     );
+    
+  
   }
 
   // login view containing
@@ -126,6 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       ],
     );
+    
   }
 
   // Register view redirects
