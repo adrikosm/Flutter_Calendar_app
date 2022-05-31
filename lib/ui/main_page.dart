@@ -352,31 +352,6 @@ class _MyMainPageState extends State<MyMainPage> {
     }
   }
 
-// Shows a bottom modal to edit the task
-  // editTaskView(BuildContext context, TaskModel task) {
-
-  //   refreshTaskController();
-  //   // Refresh default values to the current task data
-  //   refreshDefaultValues(task);
-
-  //   Get.bottomSheet(
-  //     Container(
-  //       padding: const EdgeInsets.only(top: 5, bottom: 5),
-  //       height: height * 0.8,
-  //       decoration: const BoxDecoration(
-  //         image: DecorationImage(
-  //             image: AssetImage('assets/images/taskedit.jpg'),
-  //             fit: BoxFit.cover),
-  //       ),
-  //       child: Align(
-  //         alignment: Alignment.topRight,
-  //         child: bottomSheet(task),
-  //       ),
-  //     ),
-  //   );
-
-  // }
-
   editTaskView(BuildContext context, TaskModel task) {
     refreshTaskController();
     // Refresh default values to the current task data

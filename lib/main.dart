@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         '/AddTaskPage': (context) => AddTaskPage(
               previousDate: DateTime.now(),
             ),
-        '/MainPage': (context) => MyMainPage(),
+        '/MainPage': (context) => const MyMainPage(),
       },
     );
   }

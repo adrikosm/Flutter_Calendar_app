@@ -95,3 +95,21 @@ TextStyle get homePageTaskNormal {
     fontWeight: FontWeight.normal,
   ));
 }
+
+TextStyle get loginPageTitle {
+  return GoogleFonts.lato(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  ));
+}
+
+TextStyle get loginPageSubtitle {
+  return GoogleFonts.lato(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.normal,
+  ));
+}
