@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:task_1/ui/add_task_bar.dart';
-import 'package:task_1/ui/home_page.dart';
-import 'package:task_1/ui/register_form.dart';
+import 'package:task_1/ui/screens/add_task_bar.dart';
+import 'package:task_1/ui/screens/home_page.dart';
+import 'package:task_1/ui/screens/register_form.dart';
 
-import 'ui/main_page.dart';
+import 'ui/screens/main_page.dart';
 import 'ui/theme.dart';
 
 Future<void> main() async {

@@ -5,11 +5,11 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_1/controllers/task_controller.dart';
 import 'package:task_1/models/task_model.dart';
-import 'package:task_1/ui/add_task_bar.dart';
+import 'package:task_1/ui/screens/add_task_bar.dart';
 import 'package:task_1/ui/widgets/task_tile.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
-import '../utils/colors_util.dart';
-import 'theme.dart';
+import '../../utils/colors_util.dart';
+import '../theme.dart';
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({Key key}) : super(key: key);
@@ -75,9 +75,10 @@ class _MyMainPageState extends State<MyMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    refreshTaskController();
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    refreshTaskController();
+
     return Scaffold(
       appBar: appBarView(),
       body: DecoratedBox(
@@ -184,14 +185,13 @@ class _MyMainPageState extends State<MyMainPage> {
         firstDay: DateTime(2000),
         lastDay: DateTime(2100),
         calendarFormat: format,
-        // Create an event loader for each day]
+        // Create an event loader for each day
 
         eventLoader: (date) {
           List<DateTime> events = [];
-          DateTime test;
-          test = (_getEventsForDay(date));
-          if (test != null) {
-            events.add(test);
+
+          if (_getEventsForDay(date) != null) {
+            events.add(_getEventsForDay(date));
           }
 
           return events;

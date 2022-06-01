@@ -5,7 +5,7 @@ import 'package:task_1/controllers/task_controller.dart';
 import 'package:task_1/models/task_model.dart';
 import 'package:task_1/ui/widgets/button.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
-import 'theme.dart';
+import '../theme.dart';
 
 class AddTaskPage extends StatefulWidget {
   final DateTime previousDate;
