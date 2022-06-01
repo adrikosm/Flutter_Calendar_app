@@ -180,25 +180,26 @@ class _MyHomePageState extends State<MyHomePage> {
       alignment: Alignment.center,
       padding: const EdgeInsets.all(5.0),
       width: width * 0.6,
-      child: GestureDetector(
-        onTap: ()=> Get.toNamed('/RegisterPage'),
-        child: Column(
-          children: [
-            Text(
-              'Don\'t have an account?',
-              style: loginPageSubtitle,
-            ),
-            Container(
-              child: Text(
-                'Register Here',
-                style: loginPageSubtitle,
-              ),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(width: 1,color: Colors.white))
-              ),
-            ),
-          ],
-        ),
+      child: Column(
+        children: [
+          Text(
+            'Don\'t have an account?',
+            style: loginPageSubtitle,
+          ),
+          GestureDetector(
+              onTap: () => Get.toNamed('/RegisterPage'),
+              child: Container(
+                child: Text(
+                  'Register Here',
+                  style: loginPageSubtitle,
+                ),
+                decoration: const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 1, color: Colors.white),
+                  ),
+                ),
+              ))
+        ],
       ),
     );
   }
@@ -230,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // chech the database for the user
     if (usernameController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
-      Get.toNamed('/RegisterPage');
+      Get.toNamed('/MainPage');
     }
 
     if (usernameController.text.isEmpty && passwordController.text.isEmpty) {

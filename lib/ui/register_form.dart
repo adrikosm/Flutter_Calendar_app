@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:intl/intl.dart';
 
 class CreateNewAccount extends StatefulWidget {
   const CreateNewAccount({Key key}) : super(key: key);
@@ -12,19 +10,22 @@ class CreateNewAccount extends StatefulWidget {
 }
 
 class _CreateNewAccountState extends State<CreateNewAccount> {
-  // Controllers for the text fields
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
+  // Get screen sizes
+  double width = 0.0;
+  double height = 0.0;
 
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _passwordConfirmController = TextEditingController();
+  // Controllers for the text fields
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
   // Working Hours
   String startTime = '08:00';
   String endTime = '16:00';
   // Date of birth
-  DateTime _dateOfBirth = DateTime.now();
+  final DateTime _dateOfBirth = DateTime.now();
   // Color selected by user
   Color _color;
 
@@ -53,12 +54,26 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
         children: [
           homePageBackground(),
+          Container(
+            alignment: Alignment.center,
+            width: width * 0.8,
+            height: height * 0.1,
+            child: const Text(
+              "REGISTER PAGE IN PROGRESS",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 40,
+              ),
+            ),
+          )
         ],
       ),
     );
