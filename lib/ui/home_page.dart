@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
 
@@ -16,6 +14,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double width = 0.0;
   double height = 0.0;
+  // Get user and password controller
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
       children: [
         homePageBackground(),
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
           body: SafeArea(
             child: Column(
@@ -69,12 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-          floatingActionButton: actionButton(),
         )
       ],
     );
-    
-  
   }
 
   // login view containing
@@ -82,75 +81,125 @@ class _MyHomePageState extends State<MyHomePage> {
   loginView() {
     return Column(
       children: [
-        Container(
-          width: width * 0.8,
-          decoration: BoxDecoration(
-              color: Color.fromARGB(160, 226, 222, 222).withOpacity(0.5),
-              borderRadius: BorderRadius.circular(20)),
-          child: TextField(
-            style: loginPageSubtitle,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              border: InputBorder.none,
-              hintText: "Username",
-              hintStyle: loginPageTitle,
-              prefixIcon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10) ,
-                child:Icon(Icons.account_circle_outlined,color: Colors.white,size: 32,),
-                ),
-            ),
-          ),
-        ),
+        usernameField(),
         const SizedBox(
           height: 20,
         ),
-        Container(
-          width: width * 0.8,
-          decoration: BoxDecoration(
-              color: Color.fromARGB(160, 226, 222, 222).withOpacity(0.5),
-              borderRadius: BorderRadius.circular(20)),
-          child: TextField(
-            style: loginPageSubtitle,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              border: InputBorder.none,
-              hintText: "Password",
-              hintStyle: loginPageTitle,
-              prefixIcon: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Icon(Icons.lock_outlined,color: Colors.white,size: 32,),
-                ),
+        passwordField(),
+        const SizedBox(
+          height: 20,
+        ),
+        loginButton(),
+      ],
+    );
+  }
+
+  loginButton() {
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(10),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(width * 0.5, 55),
+          primary: HexColor('2E86C1'),
+          textStyle: const TextStyle(
+            fontSize: 28,
+            color: Colors.white,
+            // fontWeight: FontWeight.bold,
+          ),
+        ),
+        onPressed: () {
+          validateData();
+        },
+        child: const Text(
+          'Login',
+        ),
+      ),
+    );
+  }
+
+  passwordField() {
+    return Container(
+      width: width * 0.8,
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(160, 226, 222, 222).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(20)),
+      child: TextField(
+        controller: passwordController,
+        style: loginPageSubtitle,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          border: InputBorder.none,
+          hintText: "Password",
+          hintStyle: loginPageTitle,
+          prefixIcon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(
+              Icons.lock_outlined,
+              color: Colors.white,
+              size: 32,
             ),
           ),
         ),
-
-
-
-
-      ],
+        obscureText: true,
+      ),
     );
-    
+  }
+
+  usernameField() {
+    return Container(
+      width: width * 0.8,
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(160, 226, 222, 222).withOpacity(0.5),
+          borderRadius: BorderRadius.circular(20)),
+      child: TextField(
+        controller: usernameController,
+        style: loginPageSubtitle,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 10),
+          border: InputBorder.none,
+          hintText: "Username",
+          hintStyle: loginPageTitle,
+          prefixIcon: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(
+              Icons.account_circle_outlined,
+              color: Colors.white,
+              size: 32,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   // Register view redirects
   // the user to the register page
   registerView() {
-    return const Text(
-      "Not a member? Register Here",
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 18,
+    return Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(5.0),
+      width: width * 0.6,
+      child: GestureDetector(
+        onTap: ()=> Get.toNamed('/RegisterPage'),
+        child: Column(
+          children: [
+            Text(
+              'Don\'t have an account?',
+              style: loginPageSubtitle,
+            ),
+            Container(
+              child: Text(
+                'Register Here',
+                style: loginPageSubtitle,
+              ),
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(width: 1,color: Colors.white))
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
-
-  // Floating action button
-  Widget actionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        Navigator.pushNamed(context, '/MainPage');
-      },
-      child: const Icon(Icons.add),
     );
   }
 
@@ -174,5 +223,43 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  validateData() {
+    // IF user has entered the username and password
+    // chech the database for the user
+    if (usernameController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      Get.toNamed('/RegisterPage');
+    }
+
+    if (usernameController.text.isEmpty && passwordController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please fill all the fields',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color.fromARGB(122, 255, 255, 255),
+        colorText: const Color.fromARGB(255, 175, 28, 18),
+        icon: const Icon(Icons.warning_amber_rounded),
+      );
+    } else if (usernameController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please input your username',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color.fromARGB(122, 255, 255, 255),
+        colorText: const Color.fromARGB(255, 175, 28, 18),
+        icon: const Icon(Icons.warning_amber_rounded),
+      );
+    } else if (passwordController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please input your password',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color.fromARGB(122, 255, 255, 255),
+        colorText: const Color.fromARGB(255, 175, 28, 18),
+        icon: const Icon(Icons.warning_amber_rounded),
+      );
+    }
   }
 }

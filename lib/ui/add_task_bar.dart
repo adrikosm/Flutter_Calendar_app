@@ -5,7 +5,6 @@ import 'package:task_1/controllers/task_controller.dart';
 import 'package:task_1/models/task_model.dart';
 import 'package:task_1/ui/widgets/button.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
-import 'package:task_1/utils/colors_util.dart';
 import 'theme.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -70,9 +69,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
         children: <Widget>[
           Container(
             decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/images/taskbg.jpg'),
-                    fit: BoxFit.cover)),
+              image: DecorationImage(
+                  image: AssetImage('assets/images/taskbg.jpg'),
+                  fit: BoxFit.cover),
+            ),
             alignment: Alignment.bottomCenter,
             padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
             child: SingleChildScrollView(

@@ -6,7 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:task_1/controllers/task_controller.dart';
 import 'package:task_1/models/task_model.dart';
 import 'package:task_1/ui/add_task_bar.dart';
-import 'package:task_1/ui/widgets/TaskTile.dart';
+import 'package:task_1/ui/widgets/task_tile.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import '../utils/colors_util.dart';
 import 'theme.dart';
@@ -73,16 +73,6 @@ class _MyMainPageState extends State<MyMainPage> {
     '#607D8B'
   ];
 
-  // Dynamic String with all necessary user Data
-  // This will be updated from the database
-  // final List<Map<String, dynamic>> _people = [
-  //   {"id": "c1", "name": 'John', "color": '#00bcd4'},
-  //   {"id": "c2", "name": "Jane", "color": '#ff9800'},
-  //   {"id": "c3", "name": "Jack", "color": '#9c27b0'},
-  //   {"id": "c4", "name": "Jill", "color": '#ff5722'},
-  //   {"id": "c5", "name": "No one", "color": '#ff3232'},
-  // ];
-
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -134,7 +124,7 @@ class _MyMainPageState extends State<MyMainPage> {
   Widget topView() {
     if (format == CalendarFormat.month) {
       setState(() {
-        topViewHeight = height * 0.55;
+        topViewHeight = height * 0.50;
       });
     } else if (format == CalendarFormat.twoWeeks) {
       setState(() {
