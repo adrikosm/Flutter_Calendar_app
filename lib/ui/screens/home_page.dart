@@ -158,17 +158,18 @@ class _MyHomePageState extends State<MyHomePage> {
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 10),
           border: InputBorder.none,
-          hintText: "Username",
+          hintText: "Email",
           hintStyle: loginPageTitle,
           prefixIcon: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: Icon(
-              Icons.account_circle_outlined,
+              Icons.email_outlined,
               color: Colors.white,
               size: 32,
             ),
           ),
         ),
+        keyboardType: TextInputType.emailAddress,
       ),
     );
   }

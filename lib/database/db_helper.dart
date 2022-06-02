@@ -12,6 +12,7 @@ class DBHelper {
   static const _databaseName = "MyDatabase.db";
   static const _databaseVersion = 1;
   static const String tableName = "task";
+  static const String loginTableName = 'userData';
 
   // make this a singleton class
   DBHelper._privateConstructor();
@@ -35,6 +36,7 @@ class DBHelper {
 
   // SQL code to create the database table
   Future _onCreate(Database db, int version) async {
+    // Create table for tasks
     await db.execute('''
         CREATE TABLE $tableName(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,6 +51,20 @@ class DBHelper {
         isCompleted INTEGER
         )
                         ''');
+    // Create table for login
+    await db.execute(''' 
+    CREATE TABLE $loginTableName(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      firstName STRING,
+      lastName STRING,
+      email STRING,
+      password STRING,
+      color STRING,
+      startTime STRING,
+      endTime STRING,
+      usertype STRING,
+    )
+    ''');
   }
 
   static Future<int> insert(TaskModel task) async {

@@ -1,9 +1,7 @@
-// ignore_for_file: unused_field
-
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:task_1/ui/theme.dart';
+import 'package:get/route_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import 'package:task_1/utils/colors_util.dart';
 
@@ -20,7 +18,6 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   double height = 0.0;
 
   // Controllers for the text fields
-  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -30,8 +27,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   // Working Hours
   String startTime = '08:00';
   String endTime = '16:00';
-  // Date of birth
-  final DateTime _dateOfBirth = DateTime.now();
+
   // Color selected by user
   String _color = '#9E9E9E';
 
@@ -110,20 +106,6 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       child: Column(
         children: [
           MyInputField(
-            title: 'Username',
-            controller: _usernameController,
-            hint: 'Enter your username',
-            whiteText: true,
-            fullSize: false,
-          ),
-          MyInputField(
-            title: 'Email',
-            controller: _emailController,
-            hint: 'Enter your email',
-            whiteText: true,
-            fullSize: false,
-          ),
-          MyInputField(
             title: 'First Name',
             controller: _firstNameController,
             hint: 'Enter your first name',
@@ -134,6 +116,13 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             title: 'Last Name',
             controller: _lastNameController,
             hint: 'Enter your last name',
+            whiteText: true,
+            fullSize: false,
+          ),
+          MyInputField(
+            title: 'Email',
+            controller: _emailController,
+            hint: 'Enter your email',
             whiteText: true,
             fullSize: false,
           ),
@@ -152,11 +141,157 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             fullSize: false,
           ),
           colorView(),
+          startAndEndTimeView(),
+          const SizedBox(
+            height: 20,
+          ),
+          bottomButtons(),
         ],
       ),
     );
   }
 
+  // Cancel and Create account buttons
+  bottomButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(width * 0.3, 50),
+                primary: HexColor('#CB4335'),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: const Text(
+                'Cancel',
+              ),
+            ),
+          ),
+        ),
+        const Spacer(),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              onPressed: () {
+                validateData();
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(width * 0.3, 50),
+                primary: HexColor('#2E86C1'),
+                textStyle: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  // fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: const Text(
+                'Create',
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  validateData() {}
+
+  // TIME VIEW
+  startAndEndTimeView() {
+    return Row(
+      children: [
+        Expanded(
+          child: MyInputField(
+            title: 'Start Time',
+            hint: startTime,
+            whiteText: true,
+            fullSize: false,
+            widget: IconButton(
+              onPressed: () {
+                getTimeFromUser(true);
+              },
+              icon: const Icon(Icons.access_time, color: Colors.white),
+            ),
+          ),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: MyInputField(
+            title: 'End Time',
+            whiteText: true,
+            fullSize: false,
+            hint: endTime,
+            widget: IconButton(
+              onPressed: () {
+                getTimeFromUser(false);
+              },
+              icon: const Icon(Icons.access_time, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  getTimeFromUser(bool isStartTime) async {
+    var pickedTime = await _showTimePicker(isStartTime);
+
+    // Format pickedTime to 24 hour format using the extension function
+    String _formatedTime = TimeOfDayConverter(pickedTime).to24hours();
+
+    if (pickedTime == null) {
+      return;
+    } else if (isStartTime) {
+      setState(() {
+        startTime = _formatedTime;
+      });
+    } else {
+      setState(() {
+        endTime = _formatedTime;
+      });
+    }
+  }
+
+  _showTimePicker(bool isStartTime) {
+    int displayHour;
+    int displayMinute;
+
+    if (isStartTime) {
+      displayHour = DateFormat('HH:mm').parse(startTime).hour;
+      displayMinute = DateFormat('HH:mm').parse(startTime).minute;
+    } else {
+      displayHour = DateFormat('HH:mm').parse(endTime).hour;
+      displayMinute = DateFormat('HH:mm').parse(endTime).minute;
+    }
+
+    return showTimePicker(
+        initialEntryMode: TimePickerEntryMode.input,
+        context: context,
+        initialTime: TimeOfDay(
+          hour: displayHour,
+          minute: displayMinute,
+        ),
+        builder: (context, childWidget) {
+          return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                  // Using 24-Hour format
+                  alwaysUse24HourFormat: true),
+              // If you want 12-Hour format, just change alwaysUse24HourFormat to false or remove all the builder argument
+              child: childWidget);
+        });
+  }
+
+  // Color view containing list of hexcolors
   colorView() {
     return MyInputField(
       whiteText: true,
@@ -224,5 +359,15 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         ),
       ),
     );
+  }
+}
+
+// Extension to convert TimeOfDay to 24 hour format
+extension TimeOfDayConverter on TimeOfDay {
+  String to24hours() {
+    final hour = this.hour.toString().padLeft(2, "0");
+    // ignore: unnecessary_this
+    final min = this.minute.toString().padLeft(2, "0");
+    return "$hour:$min";
   }
 }

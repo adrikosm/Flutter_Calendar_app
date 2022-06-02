@@ -4,7 +4,6 @@ import 'package:task_1/models/task_model.dart';
 
 class TaskController extends GetxController {
   @override
-  // ignore: unnecessary_overrides
   void onReady() {
     super.onReady();
   }
@@ -16,9 +15,6 @@ class TaskController extends GetxController {
 
   // Task List for the Home Page
   var taskList = <TaskModel>[].obs;
-
-  // Event List
-  var eventList = <TaskModel>[].obs;
 
   // Get Data from table
   void getTasks() async {

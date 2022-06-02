@@ -34,7 +34,7 @@ class TaskModel {
     color = json['color'];
     isCompleted = json['isCompleted'];
   }
-// PREVIOUS ITERATION
+
   Map<String, dynamic> toJson() {
     var data = <String, dynamic>{};
     data['id'] = id;
@@ -50,17 +50,3 @@ class TaskModel {
     return data;
   }
 }
-
-//   Map<String, Object> toJson() => {
-//         TaskFields.id: id ?? 0,
-//         TaskFields.title: title,
-//         TaskFields.description: description,
-//         TaskFields.assign: assign == " " ? "None" : assign,
-//         TaskFields.date: date,
-//         TaskFields.startTime: startTime,
-//         TaskFields.endTime: endTime,
-//         TaskFields.remind: remind,
-//         TaskFields.color: color,
-//         TaskFields.isCompleted: isCompleted ?? 0,
-//       };
-// }
