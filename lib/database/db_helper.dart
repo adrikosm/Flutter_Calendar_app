@@ -5,6 +5,7 @@ import 'dart:io' show Directory;
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
+import 'package:task_1/models/userdata_model.dart';
 
 // SECONDARY CLASS ITERATION
 
@@ -67,36 +68,53 @@ class DBHelper {
     ''');
   }
 
+  // HELPER METHODS FOR TASK TABLE
   static Future<int> insert(TaskModel task) async {
-    print("INSERT FUNCTION CALLED DATA:" + task.toJson().toString());
+    print("TASK INSERT:" + task.toJson().toString());
     Database db = await DBHelper.instance.database;
     return await db.insert(DBHelper.tableName, task.toJson());
   }
 
   static Future<List<Map<String, dynamic>>> query() async {
-    print("Query Function Called");
+    print("TASK QUERY CALLED");
     Database db = await instance.database;
     return await db.query(tableName);
   }
 
   // Deletes a single element based on given id
   static delete(TaskModel task) async {
-    print("DELETE FUNCTION CALLED");
+    print("TASK DELETE CALLED");
     Database db = await instance.database;
     db.delete(tableName, where: 'id = ?', whereArgs: [task.id]);
   }
 
-// Deletes everything in the table
-  static deleteAll() async {
-    Database db = await instance.database;
-    return await db.rawDelete("Delete from $tableName");
-  }
-
   // Updates a single row based on given id
   static updateRow(TaskModel task) async {
-    print("UPDATE FUNCTION CALLED");
+    print("TASK UPDATE CALLED");
     Database db = await instance.database;
     db.update(DBHelper.tableName, task.toJson(),
         where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  // HELPER METHODS FOR LOGIN TABLE
+
+  // Inserts a single row in the table with all the user data
+  static Future<int> insertLogin(UserDataModel user) async {
+    print("LOGIN INSERT :" + user.toJson().toString());
+    Database db = await DBHelper.instance.database;
+    return await db.insert(DBHelper.loginTableName, user.toJson());
+  }
+
+  static Future<List<Map<String, dynamic>>> queryLogin() async {
+    print("LOGIN QUERY CALLED");
+    Database db = await instance.database;
+    return await db.query(loginTableName);
+  }
+
+// Deletes everything in both tables
+  static deleteAll() async {
+    Database db = await instance.database;
+    await db.rawDelete("Delete from $tableName");
+    await db.rawDelete("Delete from $loginTableName");
   }
 }

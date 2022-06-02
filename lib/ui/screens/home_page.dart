@@ -59,15 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 )
-                // Column(
-                //   children: [
-                //     loginView(),
-                //     const SizedBox(
-                //       height: 50,
-                //     ),
-                //     registerView(),
-                //   ],
-                // ),
               ],
             ),
           ),

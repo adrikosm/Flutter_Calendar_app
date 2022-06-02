@@ -125,12 +125,14 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             hint: 'Enter your email',
             whiteText: true,
             fullSize: false,
+            isEmail: true,
           ),
           MyInputField(
             title: 'Password',
             controller: _passwordController,
             hint: 'Enter your password',
             whiteText: true,
+            isPassword: true,
             fullSize: false,
           ),
           MyInputField(
@@ -139,6 +141,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             hint: 'Confirm your password',
             whiteText: true,
             fullSize: false,
+            isPassword: true,
           ),
           colorView(),
           startAndEndTimeView(),

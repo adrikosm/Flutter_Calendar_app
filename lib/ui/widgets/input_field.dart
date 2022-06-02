@@ -10,6 +10,8 @@ class MyInputField extends StatelessWidget {
   final Widget widget;
   final bool whiteText;
   final bool fullSize;
+  final bool isPassword;
+  final bool isEmail;
 
   final bool selectedHintColor;
   final String hintColor;
@@ -22,7 +24,9 @@ class MyInputField extends StatelessWidget {
       this.selectedHintColor = false,
       this.hintColor,
       this.whiteText = false,
-      this.fullSize = true})
+      this.fullSize = true,
+      this.isPassword = false,
+      this.isEmail = false})
       : super(key: key);
 
   @override
@@ -57,6 +61,10 @@ class MyInputField extends StatelessWidget {
             child: Row(children: [
               Expanded(
                 child: TextFormField(
+                  keyboardType: isEmail == true
+                      ? TextInputType.emailAddress
+                      : TextInputType.text,
+                  obscureText: isPassword == true ? true : false,
                   readOnly: widget == null ? false : true,
                   autofocus: false,
                   cursorColor: whiteText == true ? Colors.white : Colors.grey,
