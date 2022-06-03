@@ -64,6 +64,7 @@ class DBHelper {
       startTime STRING,
       endTime STRING,
       usertype STRING,
+      isLoggedIn STRING
     )
     ''');
   }
@@ -96,6 +97,7 @@ class DBHelper {
         where: 'id = ?', whereArgs: [task.id]);
   }
 
+
   // HELPER METHODS FOR LOGIN TABLE
 
   // Inserts a single row in the table with all the user data
@@ -112,9 +114,9 @@ class DBHelper {
   }
 
 // Deletes everything in both tables
-  static deleteAll() async {
-    Database db = await instance.database;
-    await db.rawDelete("Delete from $tableName");
-    await db.rawDelete("Delete from $loginTableName");
-  }
+  // static deleteAll() async {
+  //   Database db = await instance.database;
+  //   await db.rawDelete("Delete from $tableName");
+  //   await db.rawDelete("Delete from $loginTableName");
+  // }
 }

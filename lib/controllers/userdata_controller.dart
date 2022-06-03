@@ -12,7 +12,7 @@ class UserDataController extends GetxController {
   var userList = <UserDataModel>[].obs;
 
 // Insert user data into userData table
-  Future<int> addUserData({UserDataModel userData, UserDataModel user}) async {
+  Future<int> addUserData({UserDataModel userData}) async {
     return await DBHelper.insertLogin(userData);
   }
 

@@ -1,8 +1,6 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:task_1/controllers/userdata_controller.dart';
 import 'package:task_1/models/userdata_model.dart';
@@ -478,21 +476,21 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         // to sqlite database
         _addTaskToDB();
         
-        // Get.toNamed('/MainPage');
+        Get.toNamed('/');
       }
     }
   }
   _addTaskToDB()async{
     await _userDataController.addUserData(
-      user:  UserDataModel(
-        email: _emailController.text,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        password: _passwordController.text,
+      userData:  UserDataModel(
+        email: _emailController.text.toString(),
+        firstName: _firstNameController.text.toString(),
+        lastName: _lastNameController.text.toString(),
+        password: _passwordController.text.toString(),
         color: _color,
         startTime: startTime,
         endTime: endTime,
-        isLoggedIn: true,
+        isLoggedIn: false,
         usertype: 'admin',
       ),
 
