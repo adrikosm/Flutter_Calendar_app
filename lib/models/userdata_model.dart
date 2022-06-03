@@ -7,7 +7,8 @@ class UserDataModel {
   dynamic color;
   dynamic startTime;
   dynamic endTime;
-  dynamic usertype;
+  dynamic usertype; // Usertype can be either 'admin' or 'user'
+  bool isLoggedIn;
 
   UserDataModel(
       {this.id,
@@ -18,7 +19,8 @@ class UserDataModel {
       this.color,
       this.startTime,
       this.endTime,
-      this.usertype});
+      this.usertype,
+      this.isLoggedIn});
 
   UserDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +32,7 @@ class UserDataModel {
     startTime = json['startTime'];
     endTime = json['endTime'];
     usertype = json['usertype'];
+    isLoggedIn = json['isLoggedIn'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +46,8 @@ class UserDataModel {
     data['startTime'] = startTime;
     data['endTime'] = endTime;
     data['usertype'] = usertype;
+    data['isLoggedIn'] = isLoggedIn;
     return data;
   }
+
 }

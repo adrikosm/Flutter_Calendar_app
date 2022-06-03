@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/route_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:task_1/controllers/userdata_controller.dart';
+import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import 'package:task_1/utils/colors_util.dart';
 
@@ -17,13 +21,23 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   double width = 0.0;
   double height = 0.0;
 
+  // User data controller to pass data to db
+  final UserDataController _userDataController = Get.put(UserDataController());
+
+
+
   // Controllers for the text fields
   final TextEditingController _emailController = TextEditingController();
+  bool emailValid = false;
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
+
+  // Password fields
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
       TextEditingController();
+  bool passwordMatch = false;
+
   // Working Hours
   String startTime = '08:00';
   String endTime = '16:00';
@@ -127,6 +141,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             fullSize: false,
             isEmail: true,
           ),
+          checkEmail(),
           MyInputField(
             title: 'Password',
             controller: _passwordController,
@@ -143,6 +158,8 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
             fullSize: false,
             isPassword: true,
           ),
+          // Check if passwords match
+          checkPassword(),
           colorView(),
           startAndEndTimeView(),
           const SizedBox(
@@ -152,6 +169,77 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         ],
       ),
     );
+  }
+
+// checks wheather email is valid
+// Uses regex expressions
+  checkEmail() {
+    const pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+    final regex = RegExp(pattern);
+
+    if (_emailController.text.isNotEmpty) {
+      if (!regex.hasMatch(_emailController.text)) {
+        setState(() {
+          emailValid = false;
+        });
+
+        return Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: const Text(
+            'Email is not valid',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16,
+            ),
+          ),
+        );
+      } else {
+        setState(() {
+          emailValid = true;
+        });
+        return Container();
+      }
+    } else {
+      return Container();
+    }
+  }
+
+// Checks wheather passwordConfirm is not empty
+// then checks if passwords match
+  checkPassword() {
+    if (_passwordConfirmController.text.isNotEmpty) {
+      if (_passwordController.text != _passwordConfirmController.text) {
+        setState(() {
+          passwordMatch = false;
+        });
+        return Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: const Text(
+            'Passwords do not match',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 16,
+            ),
+          ),
+        );
+      } else {
+        setState(() {
+          passwordMatch = true;
+        });
+        return Container(
+          margin: const EdgeInsets.only(top: 20),
+          child: const Text(
+            'Passwords match',
+            style: TextStyle(
+              color: Colors.green,
+              fontSize: 16,
+            ),
+          ),
+        );
+      }
+    } else {
+      return Container();
+    }
   }
 
   // Cancel and Create account buttons
@@ -207,15 +295,13 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
     );
   }
 
-  validateData() {}
-
   // TIME VIEW
   startAndEndTimeView() {
     return Row(
       children: [
         Expanded(
           child: MyInputField(
-            title: 'Start Time',
+            title: 'Shift Start',
             hint: startTime,
             whiteText: true,
             fullSize: false,
@@ -230,7 +316,7 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         const SizedBox(width: 20),
         Expanded(
           child: MyInputField(
-            title: 'End Time',
+            title: 'Shift End',
             whiteText: true,
             fullSize: false,
             hint: endTime,
@@ -363,6 +449,58 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       ),
     );
   }
+
+  // final TextEditingController _emailController = TextEditingController();
+  // bool emailValid = false;
+  // final TextEditingController _firstNameController = TextEditingController();
+  // final TextEditingController _lastNameController = TextEditingController();
+
+  // // Password fields
+  // final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _passwordConfirmController =
+  validateData() {
+    if (_emailController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _passwordConfirmController.text.isEmpty ||
+        _firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please fill all the fields',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color.fromARGB(122, 255, 255, 255),
+        colorText: const Color.fromARGB(255, 175, 28, 18),
+        icon: const Icon(Icons.warning_amber_rounded),
+      );
+    } else {
+      if (emailValid == true && passwordMatch == true) {
+        // If all the fields are valid, then upload data
+        // to sqlite database
+        _addTaskToDB();
+        
+        // Get.toNamed('/MainPage');
+      }
+    }
+  }
+  _addTaskToDB()async{
+    await _userDataController.addUserData(
+      user:  UserDataModel(
+        email: _emailController.text,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        password: _passwordController.text,
+        color: _color,
+        startTime: startTime,
+        endTime: endTime,
+        isLoggedIn: true,
+        usertype: 'admin',
+      ),
+
+    );
+  }
+
+
+
 }
 
 // Extension to convert TimeOfDay to 24 hour format

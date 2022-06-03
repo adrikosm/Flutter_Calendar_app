@@ -167,46 +167,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  // _colorView() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         'Color of Task',
-  //         style: taskHeader,
-  //       ),
-  //       const SizedBox(height: 10),
-  //       Wrap(
-  //         children: List<Widget>.generate(3, (int index) {
-  //           return GestureDetector(
-  //             onTap: () {
-  //               setState(() {
-  //                 selectedColorIndex = index;
-  //               });
-  //             },
-  //             child: Padding(
-  //               padding: const EdgeInsets.only(right: 8.0),
-  //               child: CircleAvatar(
-  //                 radius: 14,
-  //                 backgroundColor: index == 0
-  //                     ? HexColor(
-  //                         _findAssigneeColor(defaultAssignee),
-  //                       )
-  //                     : index == 1
-  //                         ? HexColor('#2E86C1')
-  //                         : HexColor('#239B56'),
-  //                 child: selectedColorIndex == index
-  //                     ? const Icon(Icons.done, color: Colors.white, size: 16)
-  //                     : Container(),
-  //               ),
-  //             ),
-  //           );
-  //         }),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   _colorView() {
     _findAssigneeColor(defaultAssignee);
     return SizedBox(
