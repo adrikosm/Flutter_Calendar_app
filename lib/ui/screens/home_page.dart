@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_1/controllers/userdata_controller.dart';
-import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/screens/main_page.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
@@ -30,7 +27,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-
+    refresUserControllerData();
     return checkController();
   }
 
@@ -42,28 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // loggedInView() {
-  //   return Stack(
-  //     children: [
-  //       homePageBackground(),
-  //       Scaffold(
-  //         body: SafeArea(
-  //           child: Column(
-  //             children: [
-  //               userInfo(),
-  //               const SizedBox(
-  //                 height: 10,
-  //               ),
-  //               logoutButton(),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   loggedInView() {
+    refresUserControllerData();
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -84,9 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
               scrollDirection: Axis.horizontal,
               child: Center(
                 child: Column(children: [
-                  userController.singleUser.first.usertype == 'admin'
-                      ? dataTableAdmin()
-                      : dataTableUser(),
+                  userController.singleUser.first.usertype == 'user'
+                      ? dataTableUser()
+                      : dataTableAdmin(),
                 ]),
               ),
             ),
@@ -128,36 +105,11 @@ class _MyHomePageState extends State<MyHomePage> {
       rows: [
         DataRow(
           cells: [
-            DataCell(
-              Text(
-                userController.singleUser.first.firstName.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.lastName.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.email.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.startTime.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.endTime.toString(),
-                style: dataTableDescription,
-              ),
-            ),
+            dataCell(userController.singleUser.first.firstName.toString()),
+            dataCell(userController.singleUser.first.lastName.toString()),
+            dataCell(userController.singleUser.first.email.toString()),
+            dataCell(userController.singleUser.first.startTime.toString()),
+            dataCell(userController.singleUser.first.endTime.toString()),
           ],
         ),
       ],
@@ -195,57 +147,26 @@ class _MyHomePageState extends State<MyHomePage> {
       rows: [
         DataRow(
           cells: [
-            DataCell(
-              Text(
-                userController.singleUser.first.id.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.firstName.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.lastName.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.email.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.color.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.startTime.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.endTime.toString(),
-                style: dataTableDescription,
-              ),
-            ),
-            DataCell(
-              Text(
-                userController.singleUser.first.usertype.toString(),
-                style: dataTableDescription,
-              ),
-            ),
+            dataCell(userController.singleUser.first.id.toString()),
+            dataCell(userController.singleUser.first.firstName.toString()),
+            dataCell(userController.singleUser.first.lastName.toString()),
+            dataCell(userController.singleUser.first.email.toString()),
+            dataCell(userController.singleUser.first.color.toString()),
+            dataCell(userController.singleUser.first.startTime.toString()),
+            dataCell(userController.singleUser.first.endTime.toString()),
+            dataCell(userController.singleUser.first.usertype.toString()),
           ],
         ),
       ],
+    );
+  }
+
+  dataCell(String info) {
+    return DataCell(
+      Text(
+        info,
+        style: dataTableDescription,
+      ),
     );
   }
 
@@ -256,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.bottomLeft,
           child: logoutButton(),
         ),
-        Spacer(),
+        const Spacer(),
         Container(
           alignment: Alignment.bottomRight,
           child: gotoMainPage(),
@@ -293,6 +214,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Stack(
       children: [
         homePageBackground(),
+        checkUserController(),
         Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
@@ -531,7 +453,6 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.warning_amber_rounded),
         );
       } else {
-        print("USER FOUND  ${userController.singleUser.first.firstName}");
         setState(() {
           loggedIn = true;
         });
@@ -570,8 +491,11 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  checkUserController() {
-    userController.getUser(usernameController.text, passwordController.text);
+  checkUserController() async {
+    // ignore: await_only_futures
+    await userController.getUser(
+        usernameController.text, passwordController.text);
+    refresUserControllerData();
     if (userController.singleUser.isEmpty) {
       return false;
     } else {
@@ -579,8 +503,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  refreshUserController() {
-    userController.userList();
+  refresUserControllerData() {
+    userController.getAllUserData();
   }
 
   logoutUser() {
