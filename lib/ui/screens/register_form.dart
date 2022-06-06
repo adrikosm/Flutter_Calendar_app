@@ -22,8 +22,6 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
   // User data controller to pass data to db
   final UserDataController _userDataController = Get.put(UserDataController());
 
-
-
   // Controllers for the text fields
   final TextEditingController _emailController = TextEditingController();
   bool emailValid = false;
@@ -475,14 +473,15 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         // If all the fields are valid, then upload data
         // to sqlite database
         _addTaskToDB();
-        
+
         Get.toNamed('/');
       }
     }
   }
-  _addTaskToDB()async{
+
+  _addTaskToDB() async {
     await _userDataController.addUserData(
-      userData:  UserDataModel(
+      userData: UserDataModel(
         email: _emailController.text.toString(),
         firstName: _firstNameController.text.toString(),
         lastName: _lastNameController.text.toString(),
@@ -490,15 +489,11 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         color: _color,
         startTime: startTime,
         endTime: endTime,
-        isLoggedIn: false,
-        usertype: 'admin',
+        isLoggedIn: 0,
+        usertype: 'user',
       ),
-
     );
   }
-
-
-
 }
 
 // Extension to convert TimeOfDay to 24 hour format

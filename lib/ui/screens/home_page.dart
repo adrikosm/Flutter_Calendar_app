@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task_1/controllers/userdata_controller.dart';
+import 'package:task_1/models/userdata_model.dart';
+import 'package:task_1/ui/screens/main_page.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
 
@@ -14,14 +19,277 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   double width = 0.0;
   double height = 0.0;
+  // Task Controller to print info on bottom view
+  final userController = Get.put(UserDataController());
+
   // Get user and password controller
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  bool loggedIn = false;
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+
+    return checkController();
+  }
+
+  checkController() {
+    if (loggedIn == false) {
+      return normalView();
+    } else {
+      return loggedInView();
+    }
+  }
+
+  // loggedInView() {
+  //   return Stack(
+  //     children: [
+  //       homePageBackground(),
+  //       Scaffold(
+  //         body: SafeArea(
+  //           child: Column(
+  //             children: [
+  //               userInfo(),
+  //               const SizedBox(
+  //                 height: 10,
+  //               ),
+  //               logoutButton(),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  loggedInView() {
+    return Scaffold(
+      body: DecoratedBox(
+        decoration: BoxDecoration(
+          color: HexColor("#2080ca"),
+          image: DecorationImage(
+            image: const AssetImage('assets/images/bgview.jpg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.2), BlendMode.lighten),
+          ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 100,
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Center(
+                child: Column(children: [
+                  userController.singleUser.first.usertype == 'admin'
+                      ? dataTableAdmin()
+                      : dataTableUser(),
+                ]),
+              ),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            bottomButtons()
+          ],
+        ),
+      ),
+    );
+  }
+
+  DataTable dataTableUser() {
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Text('First Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Last Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('email', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text(
+            'Shift Start',
+            style: dataTableTitle,
+          ),
+        ),
+        DataColumn(
+          label: Text(
+            'Shift End',
+            style: dataTableTitle,
+          ),
+        ),
+      ],
+      rows: [
+        DataRow(
+          cells: [
+            DataCell(
+              Text(
+                userController.singleUser.first.firstName.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.lastName.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.email.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.startTime.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.endTime.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  DataTable dataTableAdmin() {
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Text('id', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('First Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Last Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('email', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Color', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Shift Start', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Shift End', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('User Type', style: dataTableTitle),
+        ),
+      ],
+      rows: [
+        DataRow(
+          cells: [
+            DataCell(
+              Text(
+                userController.singleUser.first.id.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.firstName.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.lastName.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.email.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.color.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.startTime.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.endTime.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+            DataCell(
+              Text(
+                userController.singleUser.first.usertype.toString(),
+                style: dataTableDescription,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Row bottomButtons() {
+    return Row(
+      children: [
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: logoutButton(),
+        ),
+        Spacer(),
+        Container(
+          alignment: Alignment.bottomRight,
+          child: gotoMainPage(),
+        ),
+      ],
+    );
+  }
+
+  gotoMainPage() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: height * 0.05),
+      child: ElevatedButton(
+        onPressed: () {
+          Get.to(const MyMainPage());
+        },
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(width * 0.3, 50),
+          primary: HexColor('#2E86C1'),
+          textStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            // fontWeight: FontWeight.bold,
+          ),
+        ),
+        child: const Text(
+          'Go to Main Page',
+        ),
+      ),
+    );
+  }
+
+  Stack normalView() {
     return Stack(
       children: [
         homePageBackground(),
@@ -64,6 +332,30 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         )
       ],
+    );
+  }
+
+  logoutButton() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: EdgeInsets.only(top: height * 0.05),
+      child: ElevatedButton(
+        onPressed: () {
+          logoutUser();
+        },
+        style: ElevatedButton.styleFrom(
+          minimumSize: Size(width * 0.3, 50),
+          primary: HexColor('#2E86C1'),
+          textStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+            // fontWeight: FontWeight.bold,
+          ),
+        ),
+        child: const Text(
+          'Logout',
+        ),
+      ),
     );
   }
 
@@ -221,9 +513,31 @@ class _MyHomePageState extends State<MyHomePage> {
   validateData() {
     // IF user has entered the username and password
     // chech the database for the user
+
     if (usernameController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
-      Get.toNamed('/MainPage');
+      // Check the database for the user
+      // If the user is found
+      // then redirect to the home page
+      // else show an error message
+
+      if (checkUserController() == false) {
+        Get.snackbar(
+          'Error',
+          'Invalid UserName or Password',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: const Color.fromARGB(122, 255, 255, 255),
+          colorText: const Color.fromARGB(255, 175, 28, 18),
+          icon: const Icon(Icons.warning_amber_rounded),
+        );
+      } else {
+        print("USER FOUND  ${userController.singleUser.first.firstName}");
+        setState(() {
+          loggedIn = true;
+        });
+        setState(() {});
+        // Get.to(const MyMainPage());
+      }
     }
 
     if (usernameController.text.isEmpty && passwordController.text.isEmpty) {
@@ -254,5 +568,25 @@ class _MyHomePageState extends State<MyHomePage> {
         icon: const Icon(Icons.warning_amber_rounded),
       );
     }
+  }
+
+  checkUserController() {
+    userController.getUser(usernameController.text, passwordController.text);
+    if (userController.singleUser.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  refreshUserController() {
+    userController.userList();
+  }
+
+  logoutUser() {
+    userController.emptySingleUser();
+    setState(() {
+      loggedIn = false;
+    });
   }
 }

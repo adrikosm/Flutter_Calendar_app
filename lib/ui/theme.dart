@@ -113,3 +113,21 @@ TextStyle get loginPageSubtitle {
     fontWeight: FontWeight.normal,
   ));
 }
+
+TextStyle get dataTableTitle {
+  return GoogleFonts.lato(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  ));
+}
+
+TextStyle get dataTableDescription {
+  return GoogleFonts.lato(
+      textStyle: const TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+  ));
+}

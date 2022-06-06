@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:task_1/database/db_helper.dart';
 import 'package:task_1/models/userdata_model.dart';
 
@@ -8,8 +9,11 @@ class UserDataController extends GetxController {
     super.onReady();
   }
 
-  // User List for the Home Page
+  // User List containing all user datafor the Home Page
   var userList = <UserDataModel>[].obs;
+
+  // Single user containing logged in user data
+  var singleUser = <UserDataModel>[].obs;
 
 // Insert user data into userData table
   Future<int> addUserData({UserDataModel userData}) async {
@@ -22,5 +26,21 @@ class UserDataController extends GetxController {
 
     userList.assignAll(
         userData.map((data) => UserDataModel.fromJson(data)).toList());
+  }
+
+  void getUser(String email, String password) async {
+    var userData = await DBHelper.checkUser(email, password);
+    if (userData.isNotEmpty) {
+      singleUser.assignAll(
+          userData.map((data) => UserDataModel.fromJson(data)).toList());
+    } else {
+      print("User not found cleaning single user list");
+      emptySingleUser();
+    }
+  }
+
+  // Empty single user list
+  void emptySingleUser() {
+    singleUser.clear();
   }
 }

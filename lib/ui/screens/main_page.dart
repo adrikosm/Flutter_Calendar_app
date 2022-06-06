@@ -125,7 +125,7 @@ class _MyMainPageState extends State<MyMainPage> {
   Widget topView() {
     if (format == CalendarFormat.month) {
       setState(() {
-        topViewHeight = height * 0.50;
+        topViewHeight = height * 0.55;
       });
     } else if (format == CalendarFormat.twoWeeks) {
       setState(() {

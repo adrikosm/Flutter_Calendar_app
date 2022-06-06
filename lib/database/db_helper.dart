@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:task_1/controllers/userdata_controller.dart';
 import 'package:task_1/models/task_model.dart';
 import 'dart:io' show Directory;
 import 'package:path/path.dart' show join;
@@ -97,7 +99,6 @@ class DBHelper {
         where: 'id = ?', whereArgs: [task.id]);
   }
 
-
   // HELPER METHODS FOR LOGIN TABLE
 
   // Inserts a single row in the table with all the user data
@@ -113,10 +114,38 @@ class DBHelper {
     return await db.query(loginTableName);
   }
 
-// Deletes everything in both tables
-  // static deleteAll() async {
-  //   Database db = await instance.database;
-  //   await db.rawDelete("Delete from $tableName");
-  //   await db.rawDelete("Delete from $loginTableName");
-  // }
+  static Future<List<Map<String, dynamic>>> checkUser(
+      String email, String password) async {
+    Database db = await instance.database;
+    return db.rawQuery(
+        'SELECT * FROM $loginTableName WHERE email = ? AND password = ?',
+        [email, password]);
+  }
 }
+// Deletes everything in both tables
+// static deleteAll() async {
+//   print("DELETE ALL FUNCTION CALLED");
+//   Database db = await instance.database;
+//   await db.rawDelete("Delete from $tableName");
+//   await db.rawDelete("Delete from $loginTableName");
+// }
+
+// Checks wheather user is in the database
+// static checkUser(String email, String password) async {
+//   print("CHECK USER CALLED");
+//   print("EMAIL: " + email);
+//   print("PASSWORD: " + password);
+
+//   Database db = await instance.database;
+// List<Map<String, dynamic>> result = await db.rawQuery(
+//     'SELECT * FROM $loginTableName WHERE email = ? AND password = ?',
+//     [email, password]);
+
+//   if (result.isNotEmpty) {
+//     print("DB HELPER NON NULL RETURN: " + result.toString());
+//     return result[0];
+//   } else {
+//     print("DB HELPER NULL RETURN: " + result.toString());
+//     return null;
+//   }
+// }

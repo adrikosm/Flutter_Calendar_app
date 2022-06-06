@@ -8,7 +8,8 @@ class UserDataModel {
   dynamic startTime;
   dynamic endTime;
   dynamic usertype; // Usertype can be either 'admin' or 'user'
-  bool isLoggedIn;
+  dynamic isLoggedIn; // Error when setting it up as boolean so chanign to int
+  // 0 for false and 1 for true
 
   UserDataModel(
       {this.id,
@@ -49,5 +50,4 @@ class UserDataModel {
     data['isLoggedIn'] = isLoggedIn;
     return data;
   }
-
 }
