@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_1/controllers/userdata_controller.dart';
+import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/screens/main_page.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
@@ -14,10 +16,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  @override
+  initState() {
+    super.initState();
+
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
   double width = 0.0;
   double height = 0.0;
+
   // Task Controller to print info on bottom view
-  final userController = Get.put(UserDataController());
+  var userController = Get.put(UserDataController());
 
   // Get user and password controller
   TextEditingController usernameController = TextEditingController();
@@ -27,11 +38,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    refresUserControllerData();
-    return checkController();
+    refreshUserController();
+    return checkLoggedStatus();
   }
 
-  checkController() {
+  checkLoggedStatus() {
+    checkUserController();
     if (loggedIn == false) {
       return normalView();
     } else {
@@ -40,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   loggedInView() {
-    refresUserControllerData();
+    
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -61,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
               scrollDirection: Axis.horizontal,
               child: Center(
                 child: Column(children: [
-                  userController.singleUser.first.usertype == 'user'
-                      ? dataTableUser()
-                      : dataTableAdmin(),
+                  userController.singleUser.first.usertype == 'admin'
+                      ? dataTableAdmin()
+                      : dataTableUser(),
                 ]),
               ),
             ),
@@ -74,6 +86,50 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  DataTable dataTableAdmin() {
+   
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Text('id', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('First Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Last Name', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('email', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Color', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Shift Start', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('Shift End', style: dataTableTitle),
+        ),
+        DataColumn(
+          label: Text('User Type', style: dataTableTitle),
+        ),
+      ],
+      rows: userController.userList
+          .map<DataRow>((element) => DataRow(cells: [
+                dataCell(element.id.toString()),
+                dataCell(element.firstName.toString()),
+                dataCell(element.lastName.toString()),
+                dataCell(element.email.toString()),
+                dataCell(element.color.toString()),
+                dataCell(element.startTime.toString()),
+                dataCell(element.endTime.toString()),
+                dataCell(element.usertype.toString()),
+              ]))
+          .toList(),
     );
   }
 
@@ -116,51 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  DataTable dataTableAdmin() {
-    return DataTable(
-      columns: [
-        DataColumn(
-          label: Text('id', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('First Name', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('Last Name', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('email', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('Color', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('Shift Start', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('Shift End', style: dataTableTitle),
-        ),
-        DataColumn(
-          label: Text('User Type', style: dataTableTitle),
-        ),
-      ],
-      rows: [
-        DataRow(
-          cells: [
-            dataCell(userController.singleUser.first.id.toString()),
-            dataCell(userController.singleUser.first.firstName.toString()),
-            dataCell(userController.singleUser.first.lastName.toString()),
-            dataCell(userController.singleUser.first.email.toString()),
-            dataCell(userController.singleUser.first.color.toString()),
-            dataCell(userController.singleUser.first.startTime.toString()),
-            dataCell(userController.singleUser.first.endTime.toString()),
-            dataCell(userController.singleUser.first.usertype.toString()),
-          ],
-        ),
-      ],
-    );
-  }
-
   dataCell(String info) {
     return DataCell(
       Text(
@@ -177,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.bottomLeft,
           child: logoutButton(),
         ),
-        const Spacer(),
+        Spacer(),
         Container(
           alignment: Alignment.bottomRight,
           child: gotoMainPage(),
@@ -192,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
       margin: EdgeInsets.only(top: height * 0.05),
       child: ElevatedButton(
         onPressed: () {
-          Get.to(const MyMainPage());
+          Get.to(MyMainPage(singleUser: userController.singleUser.first,));
         },
         style: ElevatedButton.styleFrom(
           minimumSize: Size(width * 0.3, 50),
@@ -214,7 +225,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return Stack(
       children: [
         homePageBackground(),
-        checkUserController(),
         Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.transparent,
@@ -444,6 +454,9 @@ class _MyHomePageState extends State<MyHomePage> {
       // else show an error message
 
       if (checkUserController() == false) {
+        setState(() {
+          loggedIn = false;
+        });
         Get.snackbar(
           'Error',
           'Invalid UserName or Password',
@@ -453,11 +466,16 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.warning_amber_rounded),
         );
       } else {
+        print("USER FOUND  ${userController.singleUser.first.firstName}");
+
         setState(() {
           loggedIn = true;
         });
-        setState(() {});
-        // Get.to(const MyMainPage());
+        if (userController.singleUser.first.usertype == 'admin') {
+          setState(() {});
+        } else {
+          Get.to(MyMainPage(singleUser: userController.singleUser.first));
+        }
       }
     }
 
@@ -491,11 +509,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  checkUserController() async {
-    // ignore: await_only_futures
-    await userController.getUser(
-        usernameController.text, passwordController.text);
-    refresUserControllerData();
+  checkUserController() {
+    setState(() {
+      userController.getSingleUser(
+          usernameController.text, passwordController.text);
+    });
+
     if (userController.singleUser.isEmpty) {
       return false;
     } else {
@@ -503,8 +522,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  refresUserControllerData() {
+  refreshUserController() {
     userController.getAllUserData();
+    print(
+        "Size of User controller user list ${userController.userList.length}");
   }
 
   logoutUser() {

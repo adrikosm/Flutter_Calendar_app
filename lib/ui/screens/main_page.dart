@@ -5,23 +5,30 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_1/controllers/task_controller.dart';
 import 'package:task_1/models/task_model.dart';
+import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/screens/add_task_bar.dart';
+import 'package:task_1/ui/screens/home_page.dart';
 import 'package:task_1/ui/widgets/task_tile.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import '../../utils/colors_util.dart';
 import '../theme.dart';
 
 class MyMainPage extends StatefulWidget {
-  const MyMainPage({Key key}) : super(key: key);
+  final UserDataModel singleUser;
+  const MyMainPage({Key key, this.singleUser}) : super(key: key);
 
   @override
-  State<MyMainPage> createState() => _MyMainPageState();
+  // ignore: no_logic_in_create_state
+  State<MyMainPage> createState() => _MyMainPageState(singleUser);
 }
 
 class _MyMainPageState extends State<MyMainPage> {
   double width = 0.0;
   double height = 0.0;
   double topViewHeight = 0.0;
+  // User data from login page
+  UserDataModel singleUser;
+  _MyMainPageState(this.singleUser);
 
   // Selected date to be updated in the add task bar
   DateTime selectedDate = DateTime.now();
@@ -117,8 +124,21 @@ class _MyMainPageState extends State<MyMainPage> {
           width: 120,
         ),
       ),
+      actions: [
+        // Make a log out button
+        IconButton(
+          icon: const Icon(Icons.exit_to_app),
+          iconSize: 34,
+          onPressed: () {
+            Get.to(const MyHomePage());
+          },
+          
+        ),
+      ],
     );
   }
+
+
 
   // Top view containing:
   //  Gradient Box which will be filled by dates
@@ -407,8 +427,10 @@ class _MyMainPageState extends State<MyMainPage> {
       margin: const EdgeInsets.only(right: 20),
       child: Center(
         child: ElevatedButton(
-          child: const Text("Update",
-              style: TextStyle(color: Colors.white, fontSize: 16)),
+          child: const Text(
+            "Update",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
           style: ElevatedButton.styleFrom(
             primary: HexColor('#2386C1'),
             elevation: 0,

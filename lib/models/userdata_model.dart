@@ -36,6 +36,8 @@ class UserDataModel {
     isLoggedIn = json['isLoggedIn'];
   }
 
+  String get shiftstart => null;
+
   Map<String, dynamic> toJson() {
     var data = <String, dynamic>{};
     data['id'] = id;
