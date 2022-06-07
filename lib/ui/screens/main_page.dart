@@ -132,13 +132,10 @@ class _MyMainPageState extends State<MyMainPage> {
           onPressed: () {
             Get.to(const MyHomePage());
           },
-          
         ),
       ],
     );
   }
-
-
 
   // Top view containing:
   //  Gradient Box which will be filled by dates
@@ -878,7 +875,10 @@ class _MyMainPageState extends State<MyMainPage> {
           ),
         ),
         onPressed: () async {
-          await Get.to(AddTaskPage(previousDate: selectedDate));
+          await Get.to(AddTaskPage(
+            previousDate: selectedDate,
+            singleUser: singleUser,
+          ));
           taskController.getTasks();
         },
       ),

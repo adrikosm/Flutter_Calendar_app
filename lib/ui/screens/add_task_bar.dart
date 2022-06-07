@@ -2,26 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_1/controllers/task_controller.dart';
-import 'package:task_1/database/db_helper.dart';
 import 'package:task_1/models/task_model.dart';
+import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/widgets/button.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import '../theme.dart';
 
 class AddTaskPage extends StatefulWidget {
   final DateTime previousDate;
+  final UserDataModel singleUser;
 
-  const AddTaskPage({Key key, this.previousDate}) : super(key: key);
+  const AddTaskPage({Key key, this.previousDate, this.singleUser})
+      : super(key: key);
 
   @override
-  // ignore: no_logic_in_create_state
-  _AddTaskPageState createState() => _AddTaskPageState(previousDate);
+  _AddTaskPageState createState() =>
+      // ignore: no_logic_in_create_state
+      _AddTaskPageState(previousDate, singleUser);
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
   // Get Date from home page
   DateTime previousDate;
-  _AddTaskPageState(this.previousDate);
+  UserDataModel singleUser;
+  _AddTaskPageState(this.previousDate, this.singleUser);
 
   DateTime selectedDate;
 
@@ -407,6 +411,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     await _taskController.addTask(
       task: TaskModel(
         title: titleController.text.toString(),
+        userID: singleUser.id,
         description: descriptionController.text.toString(),
         assign: defaultAssignee,
         isCompleted: 0,
@@ -414,7 +419,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         startTime: startTime,
         endTime: endTime,
         remind: selectedReminder,
-        color: defaultColor,
+        color: singleUser.color,
       ),
     );
   }

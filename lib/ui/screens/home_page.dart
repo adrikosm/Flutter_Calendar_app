@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_1/controllers/userdata_controller.dart';
-import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/screens/main_page.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
@@ -52,7 +50,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   loggedInView() {
-    
     return Scaffold(
       body: DecoratedBox(
         decoration: BoxDecoration(
@@ -90,7 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   DataTable dataTableAdmin() {
-   
     return DataTable(
       columns: [
         DataColumn(
@@ -188,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
           alignment: Alignment.bottomLeft,
           child: logoutButton(),
         ),
-        Spacer(),
+        const Spacer(),
         Container(
           alignment: Alignment.bottomRight,
           child: gotoMainPage(),
@@ -203,7 +199,9 @@ class _MyHomePageState extends State<MyHomePage> {
       margin: EdgeInsets.only(top: height * 0.05),
       child: ElevatedButton(
         onPressed: () {
-          Get.to(MyMainPage(singleUser: userController.singleUser.first,));
+          Get.to(MyMainPage(
+            singleUser: userController.singleUser.first,
+          ));
         },
         style: ElevatedButton.styleFrom(
           minimumSize: Size(width * 0.3, 50),
@@ -466,8 +464,6 @@ class _MyHomePageState extends State<MyHomePage> {
           icon: const Icon(Icons.warning_amber_rounded),
         );
       } else {
-        print("USER FOUND  ${userController.singleUser.first.firstName}");
-
         setState(() {
           loggedIn = true;
         });
@@ -524,8 +520,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   refreshUserController() {
     userController.getAllUserData();
-    print(
-        "Size of User controller user list ${userController.userList.length}");
   }
 
   logoutUser() {

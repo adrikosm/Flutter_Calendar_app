@@ -8,20 +8,18 @@ class UserDataModel {
   dynamic startTime;
   dynamic endTime;
   dynamic usertype; // Usertype can be either 'admin' or 'user'
-  dynamic isLoggedIn; // Error when setting it up as boolean so chanign to int
-  // 0 for false and 1 for true
 
-  UserDataModel(
-      {this.id,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.password,
-      this.color,
-      this.startTime,
-      this.endTime,
-      this.usertype,
-      this.isLoggedIn});
+  UserDataModel({
+    this.id,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.password,
+    this.color,
+    this.startTime,
+    this.endTime,
+    this.usertype,
+  });
 
   UserDataModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -33,7 +31,6 @@ class UserDataModel {
     startTime = json['startTime'];
     endTime = json['endTime'];
     usertype = json['usertype'];
-    isLoggedIn = json['isLoggedIn'];
   }
 
   String get shiftstart => null;
@@ -49,7 +46,6 @@ class UserDataModel {
     data['startTime'] = startTime;
     data['endTime'] = endTime;
     data['usertype'] = usertype;
-    data['isLoggedIn'] = isLoggedIn;
     return data;
   }
 }

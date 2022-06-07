@@ -489,7 +489,6 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
         color: _color,
         startTime: startTime,
         endTime: endTime,
-        isLoggedIn: 0,
         usertype: 'user',
       ),
     );

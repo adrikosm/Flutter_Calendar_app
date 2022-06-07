@@ -1,5 +1,6 @@
 class TaskModel {
   dynamic id;
+  dynamic userID;
   dynamic title;
   dynamic description;
   dynamic assign;
@@ -12,6 +13,7 @@ class TaskModel {
 
   TaskModel(
       {this.id,
+      this.userID,
       this.title,
       this.description,
       this.assign,
@@ -24,6 +26,7 @@ class TaskModel {
 
   TaskModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    userID = json['userID'];
     title = json['title'];
     description = json['description'];
     assign = json['assign'];
@@ -38,6 +41,7 @@ class TaskModel {
   Map<String, dynamic> toJson() {
     var data = <String, dynamic>{};
     data['id'] = id;
+    data['userID'] = userID;
     data['title'] = title;
     data['description'] = description;
     data['assign'] = assign;
