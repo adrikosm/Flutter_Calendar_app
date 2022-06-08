@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_1/controllers/task_controller.dart';
+import 'package:task_1/controllers/userdata_controller.dart';
 import 'package:task_1/models/task_model.dart';
 import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/screens/add_task_bar.dart';
@@ -23,6 +24,16 @@ class MyMainPage extends StatefulWidget {
 }
 
 class _MyMainPageState extends State<MyMainPage> {
+  @override
+  initState() {
+    super.initState();
+    // On first run , first set the top view
+    // in order to refresh the calendar
+    // topView();
+    // Fill the user list
+    fillPeopleList();
+  }
+
   double width = 0.0;
   double height = 0.0;
   double topViewHeight = 0.0;
@@ -39,6 +50,9 @@ class _MyMainPageState extends State<MyMainPage> {
   // Task Controller to print info on bottom view
   final taskController = Get.put(TaskController());
 
+  // User controller to get user data
+  final userController = Get.put(UserDataController());
+
   // Temporary values for the update function
   // Each time the user updates the task,
   // the values will be updated
@@ -51,9 +65,9 @@ class _MyMainPageState extends State<MyMainPage> {
   int defaultReminder;
   String defaultColor;
 
-  // Asignee list
-  // asigneeList will be updated from the database
-  List<String> assigneeList = ['John', 'Jane', 'Jack', 'Jill', 'No one'];
+  // _people will be updated from the database
+  // _people will be used to fill the dropdown menu
+  final List<Map<String, dynamic>> _people = [];
   // List of integer reminders
   List<int> remindList = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
@@ -206,13 +220,15 @@ class _MyMainPageState extends State<MyMainPage> {
 
         eventLoader: (date) {
           List<DateTime> events = [];
+          // print(_getEventsForDay(date).toString());
 
           if (_getEventsForDay(date) != null) {
+            print("DATE OF EVENT " + date.toString());
             events.add(_getEventsForDay(date));
           }
-
           return events;
         },
+
         // Change the format of the date
         // 2 weeks , 1 month , 1 week
         onFormatChanged: (CalendarFormat _format) {
@@ -353,12 +369,21 @@ class _MyMainPageState extends State<MyMainPage> {
 
   _getEventsForDay(DateTime day) {
     for (int i = 0; i < taskController.taskList.length; i++) {
-      if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
+      if (singleUser.usertype == 'admin'){
         return formatEventDate(taskController.taskList[i].date);
+      }
+      if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
+        if (singleUser.id.toString() ==
+            taskController.taskList[i].userID.toString()) {
+          return formatEventDate(taskController.taskList[i].date);
+        } else {
+          return null;
+        }
       }
     }
   }
 
+  // Edit task view is a bottom sheet with editable data
   editTaskView(BuildContext context, TaskModel task) {
     refreshTaskController();
     // Refresh default values to the current task data
@@ -559,7 +584,6 @@ class _MyMainPageState extends State<MyMainPage> {
   }
 
   // Prints out the Task data into the bottom sheet
-  // Need to be changed to make data editable
   printTaskData(TaskModel task, StateSetter setState) {
     return Column(
       children: [
@@ -717,20 +741,19 @@ class _MyMainPageState extends State<MyMainPage> {
           width: 0,
         ),
         style: taskBasicStyle,
-        items: assigneeList.map<DropdownMenuItem<String>>(
-          (String value) {
-            return DropdownMenuItem<String>(
-              value: value.toString(),
-              child: Text(
-                value.toString(),
-                style: const TextStyle(color: Colors.black),
-              ),
-            );
-          },
-        ).toList(),
-        onChanged: (String newValue) {
+        items: _people
+            .map<DropdownMenuItem<dynamic>>(
+                (person) => DropdownMenuItem<dynamic>(
+                      value: person,
+                      child: Text(
+                        person['name'].toString(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ))
+            .toList(),
+        onChanged: (dynamic newValue) {
           setState(() {
-            defaultAssignee = newValue.toString();
+            defaultAssignee = newValue['name'].toString();
           });
         },
       ),
@@ -902,5 +925,45 @@ class _MyMainPageState extends State<MyMainPage> {
       defaultReminder = task.remind;
       defaultColor = task.color;
     });
+  }
+
+  fillPeopleList() {
+    for (var i = 0; i < userController.userList.length; i++) {
+      print(userController.userList[i].toJson());
+      print("""
+        FILL PEOPLE LIST SINGLE USER INFO 
+        TYPE OF USER ${singleUser.usertype}
+      """);
+
+      if (singleUser.usertype == userController.userList[i].usertype) {
+        String nameController = (userController.userList[i].firstName +
+                ' ' +
+                userController.userList[i].lastName)
+            .toString();
+        setState(() {
+          _people.add(
+            {
+              "id": userController.userList[i].id,
+              "name": nameController,
+              "color": userController.userList[i].color,
+            },
+          );
+        });
+      } else if (singleUser.usertype == 'admin') {
+        String nameController = (userController.userList[i].firstName +
+                ' ' +
+                userController.userList[i].lastName)
+            .toString();
+        setState(() {
+          _people.add(
+            {
+              "id": userController.userList[i].id,
+              "name": nameController,
+              "color": userController.userList[i].color,
+            },
+          );
+        });
+      }
+    }
   }
 }

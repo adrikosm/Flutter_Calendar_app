@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:task_1/models/task_model.dart';
-import 'dart:io' show Directory;
-import 'package:path/path.dart' show join;
-import 'package:path_provider/path_provider.dart'
-    show getApplicationDocumentsDirectory;
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:task_1/models/userdata_model.dart';
 
 class DBHelper {
+  static Database _database;
   static const _databaseName = "MyDatabase.db";
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 4;
   static const String tableName = "task";
   static const String loginTableName = 'userData';
 
@@ -18,27 +18,34 @@ class DBHelper {
   static final DBHelper instance = DBHelper._privateConstructor();
 
   // Only have a single app-wide reference to the database
-  static Database _database;
+
   Future<Database> get database async {
-    if (_database != null) return _database;
+    // if (_database != null) return _database;
     // lazily instantiate the db the first time it is accessed
     _database = await initDb();
     return _database;
   }
 
   initDb() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+    try {
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String path = join(documentsDirectory.path, _databaseName);
+      // return deleteDatabase(path);
+      return await openDatabase(path,
+          version: _databaseVersion, onCreate: _onCreate);
+    } catch (error) {
+      print(error);
+    }
   }
 
   // SQL code to create the database table
-  Future _onCreate(Database db, int version) async {
+  static Future _onCreate(Database db, int version) async {
+    print("TABLE INITIALIZATION " + tableName);
     // Create table for tasks
     await db.execute('''
         CREATE TABLE $tableName(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userID INTEGER,
         title STRING,
         description STRING,
         assign STRING,
@@ -51,6 +58,7 @@ class DBHelper {
         )
                         ''');
     // Create table for login
+    print("TABLE INITIZLIATION " + loginTableName);
     await db.execute(''' 
     CREATE TABLE $loginTableName(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,6 +79,7 @@ class DBHelper {
   // HELPER METHODS FOR TASK TABLE
   static Future<int> insert(TaskModel task) async {
     Database db = await DBHelper.instance.database;
+    print("TASK TO BE INSEERTED: ${task.toJson()}");
     return await db.insert(DBHelper.tableName, task.toJson());
   }
 
@@ -97,6 +106,7 @@ class DBHelper {
 
   // Inserts a single row in the table with all the user data
   static Future<int> insertLogin(UserDataModel user) async {
+    print("USER TO BE INSEERTED: ${user.toJson()}");
     Database db = await DBHelper.instance.database;
     return await db.insert(DBHelper.loginTableName, user.toJson());
   }
@@ -116,8 +126,19 @@ class DBHelper {
 
   // Deletes everything in both tables
   static deleteAll() async {
+    print("CLEARING ALL DATA FROM TABLES");
     Database db = await instance.database;
     await db.rawDelete("Delete from $tableName");
     await db.rawDelete("Delete from $loginTableName");
+  }
+
+  // Drops all tables
+  static Future<void> cleanDatabase() async {
+    print("DROPPING ALL TABLES");
+    // AFTER DROPPING YOU SHOULD ALSO DELETE THE DATABASE ITSELF
+
+    Database db = await instance.database;
+    await db.execute("DROP TABLE IF EXISTS $tableName");
+    await db.execute("DROP TABLE IF EXISTS $loginTableName");
   }
 }

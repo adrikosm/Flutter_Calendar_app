@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:task_1/controllers/task_controller.dart';
+import 'package:task_1/controllers/userdata_controller.dart';
+import 'package:task_1/database/db_helper.dart';
 import 'package:task_1/models/task_model.dart';
 import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/widgets/button.dart';
@@ -22,36 +24,44 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
-  // Get Date from home page
+  // On initialize fill the lists
+  @override
+  initState() {
+    super.initState();
+    // On first run , first set the top view
+    // in order to refresh the calendar
+    fillPeopleList();
+  }
+
+  // Get date and user from previous page
   DateTime previousDate;
   UserDataModel singleUser;
   _AddTaskPageState(this.previousDate, this.singleUser);
 
-  DateTime selectedDate;
+  // Get all user data
+  var userController = Get.put(UserDataController());
 
+  // Date and hours for the task
+  DateTime selectedDate;
   String startTime = DateFormat('HH:mm').format(DateTime.now()).toString();
   // Make end Time at least one hour after start time
   String endTime = DateFormat('HH:mm')
       .format(DateTime.now().add(const Duration(hours: 1)))
       .toString();
 
-  // Set a reminder time at five minutes before end time
+  // Reminder List contains all the reminder options
   int selectedReminder = 5;
   List<int> remindList = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
-  // Create a list for the dropdown menu for task assignees
-  // Later on, this list will be populated with the names of the users
+  // Set default assignee
   String defaultAssignee = 'None';
-  List<String> assigneeList = ['John', 'Jane', 'Jack', 'Jill', 'No one'];
 
-  // Dynamic String with all necessary user Data
-  final List<Map<String, dynamic>> _people = [
-    {"id": "c1", "name": 'John', "color": '#00bcd4'},
-    {"id": "c2", "name": "Jane", "color": '#ff9800'},
-    {"id": "c3", "name": "Jack", "color": '#9c27b0'},
-    {"id": "c4", "name": "Jill", "color": '#ff5722'},
-    {"id": "c5", "name": "No one", "color": '#707b7C'},
-  ];
+  // Set default id
+  int defaultId;
+
+  // Dynamic list containing all neccesary user data
+  // It is populated with the user data from the database
+  final List<Map<String, dynamic>> _people = [];
 
   // Default color selection
   int selectedColorIndex = 0;
@@ -66,7 +76,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    refreshUserController();
     setSelectedDate();
+
     return Scaffold(
       appBar: _appBarView(context),
       body: Stack(
@@ -173,7 +185,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _colorView() {
-    _findAssigneeColor(defaultAssignee);
+    _findAssigneeColor(defaultId);
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.4,
       child: MyInputField(
@@ -183,7 +195,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         hint: 'Color',
         widget: IconButton(
           onPressed: () {
-            _findAssigneeColor(defaultAssignee);
+            _findAssigneeColor(defaultId);
           },
           icon: const Icon(Icons.palette_outlined, color: Colors.grey),
         ),
@@ -208,20 +220,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
         style: taskBasicStyle,
         // Traverse dynamic people list and
         // print out the name of the person
-        items: assigneeList.map<DropdownMenuItem<String>>(
-          (String value) {
-            return DropdownMenuItem<String>(
-              value: value.toString(),
-              child: Text(
-                value.toString(),
-                style: const TextStyle(color: Colors.grey),
-              ),
-            );
-          },
-        ).toList(),
-        onChanged: (String newValue) {
+        items: _people
+            .map<DropdownMenuItem<dynamic>>(
+                (person) => DropdownMenuItem<dynamic>(
+                      value: person,
+                      child: Text(
+                        person['name'].toString(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ))
+            .toList(),
+        onChanged: (dynamic value) {
+          print(value.toString());
           setState(() {
-            defaultAssignee = newValue.toString();
+            defaultAssignee = value['name'].toString();
+            defaultId = value['id'];
+            print("NEW ASSIGNEE " + defaultAssignee);
+            print("NEW ID " + defaultId.toString());
           });
         },
       ),
@@ -371,11 +386,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return ('$thours hours $tminutes minutes');
   }
 
-  _findAssigneeColor(String assignee) {
-    final index1 = _people.indexWhere((element) => element["name"] == assignee);
+  _findAssigneeColor(int userid) {
+    final index1 = _people.indexWhere((element) => element["id"] == userid);
     if (index1 != -1) {
       setState(() {
         defaultColor = _people[index1]["color"];
+        print("DEFAULT COLOR  " + defaultColor.toString());
       });
     } else {
       setState(() {
@@ -392,6 +408,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         descriptionController.text.isNotEmpty) {
       _addTaskToDB();
       // DBHelper.deleteAll();
+      // DBHelper.cleanDatabase();
       Get.back();
     } else if (titleController.text.isEmpty ||
         descriptionController.text.isEmpty) {
@@ -411,7 +428,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     await _taskController.addTask(
       task: TaskModel(
         title: titleController.text.toString(),
-        userID: singleUser.id,
+        userID: defaultId,
         description: descriptionController.text.toString(),
         assign: defaultAssignee,
         isCompleted: 0,
@@ -419,7 +436,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         startTime: startTime,
         endTime: endTime,
         remind: selectedReminder,
-        color: singleUser.color,
+        color: defaultColor,
       ),
     );
   }
@@ -428,6 +445,55 @@ class _AddTaskPageState extends State<AddTaskPage> {
     setState(() {
       selectedDate = previousDate;
     });
+  }
+
+  void refreshUserController() {
+    userController.getAllUserData();
+  }
+
+  // Fill the _people dynamic list with all the users
+  // from the userController
+  // If the current user is an admin he can assign tasks
+  // to other admins and users
+  // Users can only see other users
+  fillPeopleList() {
+    for (var i = 0; i < userController.userList.length; i++) {
+      print(userController.userList[i].toJson());
+      print("""
+        FILL PEOPLE LIST SINGLE USER INFO 
+        TYPE OF USER ${singleUser.usertype}
+      """);
+
+      if (singleUser.usertype == userController.userList[i].usertype) {
+        String nameController = (userController.userList[i].firstName +
+                ' ' +
+                userController.userList[i].lastName)
+            .toString();
+        setState(() {
+          _people.add(
+            {
+              "id": userController.userList[i].id,
+              "name": nameController,
+              "color": userController.userList[i].color,
+            },
+          );
+        });
+      } else if (singleUser.usertype == 'admin') {
+        String nameController = (userController.userList[i].firstName +
+                ' ' +
+                userController.userList[i].lastName)
+            .toString();
+        setState(() {
+          _people.add(
+            {
+              "id": userController.userList[i].id,
+              "name": nameController,
+              "color": userController.userList[i].color,
+            },
+          );
+        });
+      }
+    }
   }
 }
 
