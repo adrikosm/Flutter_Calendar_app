@@ -106,7 +106,7 @@ class DBHelper {
 
   // Inserts a single row in the table with all the user data
   static Future<int> insertLogin(UserDataModel user) async {
-    print("USER TO BE INSEERTED: ${user.toJson()}");
+    print("USER TO BE INSERTED: ${user.toJson()}");
     Database db = await DBHelper.instance.database;
     return await db.insert(DBHelper.loginTableName, user.toJson());
   }

@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_1/controllers/userdata_controller.dart';
+import 'package:task_1/database/db_helper.dart';
 import 'package:task_1/ui/screens/main_page.dart';
 import 'package:task_1/ui/theme.dart';
 import 'package:task_1/utils/colors_util.dart';
+import 'package:crypto/crypto.dart';
 
 class MyHomePage extends StatefulWidget {
   final String title;
@@ -249,7 +253,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      loginView(),
+                      loginInfo(),
                       const SizedBox(
                         height: 20,
                       ),
@@ -291,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // login view containing
   // username and password
-  loginView() {
+  loginInfo() {
     return Column(
       children: [
         usernameField(),
@@ -322,6 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         onPressed: () {
+          // DBHelper.deleteAll();
           validateData();
         },
         child: const Text(
@@ -505,10 +510,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  hashPassword(String password) {
+    var bytes = utf8.encode(password + '!saltandpepper'); // data being hashed
+    var digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
   checkUserController() {
     setState(() {
       userController.getSingleUser(
-          usernameController.text, passwordController.text);
+          usernameController.text, hashPassword(passwordController.text));
     });
 
     if (userController.singleUser.isEmpty) {

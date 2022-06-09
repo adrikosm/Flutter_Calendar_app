@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:task_1/controllers/userdata_controller.dart';
 import 'package:task_1/models/userdata_model.dart';
 import 'package:task_1/ui/widgets/input_field.dart';
 import 'package:task_1/utils/colors_util.dart';
+import 'package:crypto/crypto.dart';
 
 class CreateNewAccount extends StatefulWidget {
   const CreateNewAccount({Key key}) : super(key: key);
@@ -472,20 +474,26 @@ class _CreateNewAccountState extends State<CreateNewAccount> {
       if (emailValid == true && passwordMatch == true) {
         // If all the fields are valid, then upload data
         // to sqlite database
-        _addTaskToDB();
+        _addUserToDB();
 
         Get.toNamed('/');
       }
     }
   }
 
-  _addTaskToDB() async {
+  hashPassword(String password) {
+    var bytes = utf8.encode(password + '!saltandpepper'); // data being hashed
+    var digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
+  _addUserToDB() async {
     await _userDataController.addUserData(
       userData: UserDataModel(
         email: _emailController.text.toString(),
         firstName: _firstNameController.text.toString(),
         lastName: _lastNameController.text.toString(),
-        password: _passwordController.text.toString(),
+        password: hashPassword(_passwordController.text.toString()),
         color: _color,
         startTime: startTime,
         endTime: endTime,

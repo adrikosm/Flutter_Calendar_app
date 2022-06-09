@@ -32,6 +32,7 @@ class _MyMainPageState extends State<MyMainPage> {
     // topView();
     // Fill the user list
     fillPeopleList();
+    fullCalendarView();
   }
 
   double width = 0.0;
@@ -202,6 +203,7 @@ class _MyMainPageState extends State<MyMainPage> {
   }
 
   Widget fullCalendarView() {
+    setState(() {});
     return Container(
       padding: const EdgeInsets.all(2),
       decoration: const BoxDecoration(
@@ -223,7 +225,6 @@ class _MyMainPageState extends State<MyMainPage> {
           // print(_getEventsForDay(date).toString());
 
           if (_getEventsForDay(date) != null) {
-            print("DATE OF EVENT " + date.toString());
             events.add(_getEventsForDay(date));
           }
           return events;
@@ -367,18 +368,32 @@ class _MyMainPageState extends State<MyMainPage> {
     return dateTime;
   }
 
+  // Checks wheater the given day has any events
+
   _getEventsForDay(DateTime day) {
+    // If usertype is admin add all events
+    // for (int i = 0; i < taskController.taskList.length; i++) {
+    //   if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
+    //     if (singleUser.usertype == 'admin') {
+    //       return formatEventDate(taskController.taskList[i].date);
+    //     }
+    //   }
+
+    //   // If usertype is not admin check if the event is created by the user
+    //   else if (taskController.taskList[i].date ==
+    //       DateFormat.yMd().format(day)) {
+    //     if (singleUser.usertype == 'user') {
+    //       if (taskController.taskList[i].userID == singleUser.id) {
+    //         return formatEventDate(taskController.taskList[i].date);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // RETURNS ALL CALENDAR EVENTS
     for (int i = 0; i < taskController.taskList.length; i++) {
-      if (singleUser.usertype == 'admin'){
-        return formatEventDate(taskController.taskList[i].date);
-      }
       if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
-        if (singleUser.id.toString() ==
-            taskController.taskList[i].userID.toString()) {
-          return formatEventDate(taskController.taskList[i].date);
-        } else {
-          return null;
-        }
+        return formatEventDate(taskController.taskList[i].date);
       }
     }
   }
