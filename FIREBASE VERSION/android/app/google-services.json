@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "873169823762",
+    "firebase_url": "https://calendarapp-33ea2-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "calendarapp-33ea2",
+    "storage_bucket": "calendarapp-33ea2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:873169823762:android:9eb157a40d2837362150cb",
+        "android_client_info": {
+          "package_name": "com.example.task_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "873169823762-22v3d5vet6ip115hhfum1vrtmah94g05.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8HPBw5JD2bJjK2tuNaDlw6m1IgDuzA_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "873169823762-22v3d5vet6ip115hhfum1vrtmah94g05.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "873169823762-45lsno9dun8piruqbmhh95qg2bhqllv5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.task1"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
