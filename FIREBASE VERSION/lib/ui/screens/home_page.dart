@@ -470,8 +470,10 @@ class _MyHomePageState extends State<MyHomePage> {
         if (userController.singleUser.first.usertype == 'admin') {
           setState(() {});
         } else {
-          Get.to(MyMainPage(singleUser: userController.singleUser.first,
-          singleUserID: userController.singleUserID.first,));
+          Get.to(MyMainPage(
+            singleUser: userController.singleUser.first,
+            singleUserID: userController.singleUserID.first,
+          ));
         }
       }
     }

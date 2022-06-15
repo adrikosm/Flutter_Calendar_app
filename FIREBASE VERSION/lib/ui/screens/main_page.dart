@@ -17,11 +17,12 @@ import '../theme.dart';
 class MyMainPage extends StatefulWidget {
   final UserDataModel singleUser;
   final String singleUserID;
-  const MyMainPage({Key key, this.singleUser,this.singleUserID}) : super(key: key);
+  const MyMainPage({Key key, this.singleUser, this.singleUserID})
+      : super(key: key);
 
   @override
   // ignore: no_logic_in_create_state
-  State<MyMainPage> createState() => _MyMainPageState(singleUser,singleUserID);
+  State<MyMainPage> createState() => _MyMainPageState(singleUser, singleUserID);
 }
 
 class _MyMainPageState extends State<MyMainPage> {
@@ -44,7 +45,7 @@ class _MyMainPageState extends State<MyMainPage> {
   // User data from login page
   UserDataModel singleUser;
   String singleUserID;
-  _MyMainPageState(this.singleUser,this.singleUserID);
+  _MyMainPageState(this.singleUser, this.singleUserID);
 
   // Selected date to be updated in the add task bar
   DateTime selectedDate = DateTime.now();
@@ -227,7 +228,7 @@ class _MyMainPageState extends State<MyMainPage> {
         eventLoader: (date) {
           // List<DateTime> events = [];
           // // print(_getEventsForDay(date).toString());
-  
+
           // if (getEventsForDay(date) != null) {
           //   events.add(getEventsForDay(date));
           // }
@@ -378,32 +379,31 @@ class _MyMainPageState extends State<MyMainPage> {
   // Checks wheater the given day has any events
 
   getEventsForDay(DateTime day) {
-    // // If usertype is admin add all events
-    // for (int i = 0; i < taskController.taskList.length; i++) {
-    //   if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
-    //     if (singleUser.usertype == 'admin') {
-    //       return formatEventDate(taskController.taskList[i].date);
-    //     }
-    //   }
-
-    //   // If usertype is not admin check if the event is created by the user
-    //   else if (taskController.taskList[i].date ==
-    //       DateFormat.yMd().format(day)) {
-    //     if (singleUser.usertype == 'user') {
-    //       if (taskController.taskID[i] == singleUserID) {
-    //         return formatEventDate(taskController.taskList[i].date);
-    //       }
-    //     }
-    //   }
-    // }
-
-    // RETURNS ALL CALENDAR EVENTS
+    // If usertype is admin add all events
     for (int i = 0; i < taskController.taskList.length; i++) {
       if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
-        return (taskController.taskList[i].date);
+        if (singleUser.usertype == 'admin') {
+          return formatEventDate(taskController.taskList[i].date);
+        }
+      }
+
+      // If usertype is not admin check if the event is created by the user
+      else if (taskController.taskList[i].date ==
+          DateFormat.yMd().format(day)) {
+        if (singleUser.usertype == 'user') {
+          if (taskController.taskID[i] == singleUserID) {
+            return formatEventDate(taskController.taskList[i].date);
+          }
+        }
       }
     }
 
+    // // RETURNS ALL CALENDAR EVENTS
+    // for (int i = 0; i < taskController.taskList.length; i++) {
+    //   if (taskController.taskList[i].date == DateFormat.yMd().format(day)) {
+    //     return (taskController.taskList[i].date);
+    //   }
+    // }
   }
 
   // Edit task view is a bottom sheet with editable data
