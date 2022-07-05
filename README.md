@@ -19,3 +19,6 @@ In order to run it first you have to install flutter and have a viable device. <
 Secondly with git `git clone https://github.com/adrikosm/Flutter_Calendar_app.git`. <br />
 cd into the sqlite version then run a `flutter pub get` to get the necessary packages. 
 finnaly run `flutter run` to run the package on either android or ios. <br />
+
+> Dont forget to use `flutter doctor`<br />
+> So you can view and fix possible issues 
