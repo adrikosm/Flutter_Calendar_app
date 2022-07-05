@@ -14,8 +14,8 @@ A bottom sheet where you can edit the tasks.
 
 
 
->For the Sqflite version:
->In order to run it first you have to install flutter and have a viable device.
->Secondly with git `git clone https://github.com/adrikosm/Flutter_Calendar_app.git`
->cd into the sqlite version then run a `flutter pub get` to get the necessary packages. 
->finnaly run `flutter run` to run the package on either android or ios.
+For the Sqflite version: <br />
+In order to run it first you have to install flutter and have a viable device. <br />
+Secondly with git `git clone https://github.com/adrikosm/Flutter_Calendar_app.git`. <br />
+cd into the sqlite version then run a `flutter pub get` to get the necessary packages. 
+finnaly run `flutter run` to run the package on either android or ios. <br />
