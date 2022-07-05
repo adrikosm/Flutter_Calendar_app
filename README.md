@@ -14,4 +14,3 @@ A bottom sheet where you can edit the tasks.
 
 
 
-![](/images/calendar_and_task_view.png)
