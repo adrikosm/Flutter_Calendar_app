@@ -10,15 +10,15 @@ A bottom view with the tasks and their info
 A add task button which redirects you the the add task page.
 A bottom sheet where you can edit the tasks.
 
+<br/>
+        
+|                Front Page                              |Register Page                                             |                   User Info                           |
+|                :-------------                          |:---:                                                     |                   -------------:                      |
+|&nbsp;<img src='images/front_page.png' widht=700 height = 490>&nbsp;|&nbsp;<img src='images/register_page.png' widht=700 height =490>&nbsp;|&nbsp;<img src='images/user_info.png' widht=700 height = 490>&nbsp;|
+|                                                        |                                                          |                                                       |
 
 
 
-
-For the Sqflite version: <br />
-In order to run it first you have to install flutter and have a viable device. <br />
-Secondly with git `git clone https://github.com/adrikosm/Flutter_Calendar_app.git`. <br />
-cd into the sqlite version then run a `flutter pub get` to get the necessary packages. 
-finnaly run `flutter run` to run the package on either android or ios. <br />
-
-> Dont forget to use `flutter doctor`<br />
-> So you can view and fix possible issues 
+|Calendar Page                                             |Add Task Page                                           |Edit View                                                |
+|:-------------                                            |:---:                                                   |-------------:                                           |
+|&nbsp;<img src='images/calendar_page.png' widht=700 height =490>&nbsp;|&nbsp;<img src='images/add_task.png' widht = 700 height = 490>&nbsp;|&nbsp;<img src='images/edit_task.png' widht=700 height =490>&nbsp;| 
